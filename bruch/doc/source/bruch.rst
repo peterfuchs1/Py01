@@ -1,7 +1,7 @@
 Bruch module
 --------------------
 
-.. py:currentmodule:: Bruch.bruch.Bruch
+.. py:currentmodule:: bruch.Bruch
 .. autoclass:: Bruch
     :members:
     :special-members:

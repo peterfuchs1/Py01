@@ -1,10 +1,10 @@
-.. fraction documentation master file, created by
-   sphinx-quickstart on Wed Sep 17 22:03:17 2014.
+.. Bruch documentation master file, created by
+   sphinx-quickstart on Fri Sep 19 06:47:14 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to fraction's documentation!
-====================================
+Welcome to Bruch's documentation!
+=================================
 
 .. bibliographic fields:
 
@@ -21,6 +21,7 @@ Contents:
    :maxdepth: 2
 
    bruch
+
 
 Indices and tables
 ==================
