@@ -34,31 +34,32 @@ __license__ = "Python"
 #   http://www.onlamp.com/pub/a/python/2001/04/18/pydoc.html
 
 
-def info(object, spacing=10, collapse=1, **kwargs):
+def info(obj, spacing=10, collapse=1, **kwargs):
 	"""Print methods with doc strings and attributes.
 
-	:param object:	the object to introspect (modules, classes, lists, dictionaries and strings
+	:param obj:	the object to introspect (modules, classes, lists, dictionaries and strings
 	:param spacing:	default 10; how many spaces between elements and the description
 	:param collapse:	default 1; shall we consume all white spaces ?
 	:param attributes:	default False; shall we show all attributes too?
 	"""
-	#let's iterate thru the keyword arguments
-	attributes=False
-	for k,v in kwargs.items():
-		if k=='attributes':
-			if v: attributes=True
+	# let's iterate through the keyword arguments
+	attributes = False
+	for k, v in kwargs.items():
+		if k == 'attributes':
+			if v:
+				attributes = True
 
-	methodList = [e for e in dir(object) if callable(getattr(object, e))]
-	attributList= [e for e in dir(object) if not callable(getattr(object, e))]
+	methodList = [e for e in dir(obj) if callable(getattr(obj, e))]
+	attributList = [e for e in dir(obj) if not callable(getattr(obj, e))]
 	processFunc = collapse and (lambda s: " ".join(s.split())) or (lambda s: s)
-	print("\n".ljust(spacing,'=')+"\nMethods:")
-	print ("\n".join(["%s %s" %
-					(method.ljust(spacing),
-					processFunc(str(getattr(object, method).__doc__)))
-					for method in methodList]))
+	print("\n".ljust(spacing, '=') + "\nMethods:")
+	print("\n".join(
+		["%s %s" % (method.ljust(spacing),
+			processFunc(str(getattr(obj, method).__doc__)))
+			for method in methodList])
+	)
 	if attributes:
-		print("\n".ljust(spacing,'=')+"\nAttributes:")
-		print ("\n".join([attribut for attribut in attributList]))
+		print("\n".ljust(spacing, '=')+"\nAttributes:")
+		print("\n".join([a for a in attributList]))
 if __name__ == "__main__":
-	print (help.__doc__)
-
+	print(help.__doc__)
