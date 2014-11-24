@@ -48,6 +48,8 @@ def info(obj, spacing=10, collapse=1, **kwargs):
 		if k == 'attributes':
 			if v:
 				attributes = True
+		else:
+			raise TypeError('incompatible kw argument: (%s : %s) ' % (k, v))
 
 	methodList = [e for e in dir(obj) if callable(getattr(obj, e))]
 	attributList = [e for e in dir(obj) if not callable(getattr(obj, e))]
