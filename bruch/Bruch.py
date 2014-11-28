@@ -21,7 +21,7 @@ class Bruch(object):
         """
         return (self.zaehler, self.nenner).__iter__()
 
-    def __init__(self, zaehler = 0, nenner = 1):
+    def __init__(self, zaehler=0, nenner=1):
 
         """constructor
 
@@ -89,9 +89,9 @@ class Bruch(object):
             z2, n2 = zaehler, 1
         else:
             raise TypeError('incompatible types:'+type(zaehler).__name__+' + Bruch()')        
-        nennerNeu = self.nenner * n2
-        zaehlerNeu = z2*self.nenner + n2*self.zaehler
-        return Bruch(zaehlerNeu, nennerNeu)
+        nennerneu = self.nenner * n2
+        zaehlerneu = z2*self.nenner + n2*self.zaehler
+        return Bruch(zaehlerneu, nennerneu)
     
     def __complex__(self):
 
@@ -111,9 +111,9 @@ class Bruch(object):
         """
         if type(left) is int:
             z2 = left
-            nennerNeu = self.nenner
-            zaehlerNeu = z2 * self.nenner - self.zaehler
-            return Bruch(zaehlerNeu, nennerNeu)
+            nennerneu = self.nenner
+            zaehlerneu = z2 * self.nenner - self.zaehler
+            return Bruch(zaehlerneu, nennerneu)
         else:
             raise TypeError('incompatible types:' + type(left).__name__+' - Bruch()')
 
