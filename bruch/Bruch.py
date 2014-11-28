@@ -84,9 +84,9 @@ class Bruch(object):
         :return: Bruch
         """
         if isinstance(zaehler, Bruch):
-            z2,n2=zaehler
+            z2, n2 = zaehler
         elif type(zaehler) is int:
-            z2,n2=zaehler, 1
+            z2, n2 = zaehler, 1
         else:
             raise TypeError('incompatible types:'+type(zaehler).__name__+' + Bruch()')        
         nennerNeu = self.nenner * n2
@@ -399,7 +399,8 @@ class Bruch(object):
         :return: greatest common divisor
         """
         x, y = abs(x), abs(y)  # positive Werte!!
-        if x < y: x , y = y, x
+        if x < y:
+            x, y = y, x
         """Berechnung """
         while y != 0:
             x, y = y, x % y

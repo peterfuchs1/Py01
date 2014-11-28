@@ -51,17 +51,17 @@ def info(obj, spacing=10, collapse=1, **kwargs):
 		else:
 			raise TypeError('incompatible kw argument: (%s : %s) ' % (k, v))
 
-	methodList = [e for e in dir(obj) if callable(getattr(obj, e))]
-	attributList = [e for e in dir(obj) if not callable(getattr(obj, e))]
+	methodlist = [e for e in dir(obj) if callable(getattr(obj, e))]
+	attributlist = [e for e in dir(obj) if not callable(getattr(obj, e))]
 	processFunc = collapse and (lambda s: " ".join(s.split())) or (lambda s: s)
 	print("\n".ljust(spacing, '=') + "\nMethods:")
 	print("\n".join(
 		["%s %s" % (method.ljust(spacing),
 			processFunc(str(getattr(obj, method).__doc__)))
-			for method in methodList])
+			for method in methodlist])
 	)
 	if attributes:
 		print("\n".ljust(spacing, '=')+"\nAttributes:")
-		print("\n".join([a for a in attributList]))
+		print("\n".join([a for a in attributlist]))
 if __name__ == "__main__":
 	print(help.__doc__)
