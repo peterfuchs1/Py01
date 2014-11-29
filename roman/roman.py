@@ -14,8 +14,8 @@ __license__ = "Python"
 from roman.Exceptions import *
 
 class Roman:
-#Roman numerals must be less than 5000
-    MAX_ROMAN_NUMERAL = 4999
+#Roman numerals must be less than 4000
+    MAX_ROMAN_NUMERAL = 3999
 
 #Define digit mapping
     romanNumeralMap = (('M',  1000),
