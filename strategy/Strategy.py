@@ -4,7 +4,7 @@ from abc import ABCMeta
 
 class Strategy(metaclass=ABCMeta):
 
-	def execute(self, *args):
+	def execute(self, var1, *args):
 		pass
 
 	def explaination(self):

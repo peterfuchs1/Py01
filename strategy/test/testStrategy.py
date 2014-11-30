@@ -121,7 +121,7 @@ class MyModCase(unittest.TestCase):
 
 	def test_Mod_simpleTuple(self):
 		liste = (3, 4)
-		expected = divmod(liste[0], liste[1])
+		expected = liste[0] % liste[1]
 		self.assertEqual(expected, self.algorithm[4].execute(liste))
 
 	def test_Mod_3_parameter(self):

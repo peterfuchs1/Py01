@@ -9,5 +9,14 @@ class Add(Strategy):
 	def explaination(self):
 		return __name__
 
-	def execute(self, *args):
-		return sum(*args)
+	def execute(self, var1=1, *args):
+		summe=0
+		t=type(var1)
+		if t == list or t == tuple:
+			summe = sum(var1)
+		elif t == int or t == float:
+			summe = var1
+		else:
+			raise TypeError("Wrong type "+t)
+		summe += sum(args)
+		return summe
