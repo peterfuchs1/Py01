@@ -13,7 +13,30 @@ __license__ = "Python"
 
 from roman.Exceptions import *
 
-class Roman:
+class Roman(object):
+    """Roman numbers representation
+
+    """
+    __instance = None
+    def __new__(cls, val=None):
+        """We want only one instance!
+
+        :param cls:
+        :param val:
+        :return:
+        """
+        if Roman.__instance is None:
+            Roman.__instance = object.__new__(cls)
+            Roman.fillLookupTables()
+        Roman.__instance.val = val
+        return Roman.__instance
+
+#Create tables for fast conversion of roman numerals.
+#See fillLookupTables() below.
+    toRomanTable = [ None ]  # Skip an index since Roman numerals have no zero
+    fromRomanTable = {}
+
+
 #Roman numerals must be less than 4000
     MAX_ROMAN_NUMERAL = 3999
 
@@ -32,10 +55,6 @@ class Roman:
                    ('IV', 4),
                    ('I',  1))
 
-#Create tables for fast conversion of roman numerals.
-#See fillLookupTables() below.
-    toRomanTable = [ None ]  # Skip an index since Roman numerals have no zero
-    fromRomanTable = {}
     @staticmethod
     def toRoman(n):
         """convert integer to Roman numeral"""
@@ -75,4 +94,4 @@ class Roman:
             Roman.toRomanTable.append(romanNumber)
             Roman.fromRomanTable[romanNumber] = integer
     def __init__(self):
-        Roman.fillLookupTables()
+        pass
