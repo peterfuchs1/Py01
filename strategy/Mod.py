@@ -4,14 +4,23 @@ from strategy.Strategy import Strategy
 
 
 class Mod(Strategy):
-	""" sum up all values of the given tuple
+	""" modulo up all values of the given tuple
 	"""
 	def explaination(self):
 		return __name__
 
-	def execute(self, *args):
-		liste = args[0]
-		div = liste[0]
-		for x in liste[1:]:
+	def execute(self, var1=1, *args):
+		t = type(var1)
+		div=0
+		if t == list or t == tuple:
+			div = var1[0]
+			for x in var1[1:]:
+				div %= x
+		elif t == int or t == float:
+			div = var1
+		else:
+			raise TypeError("Wrong type "+str(t))
+		for x in args:
 			div %= x
+
 		return div
