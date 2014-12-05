@@ -13,9 +13,10 @@ last edited: October 2011
 """
 
 import sys
-from PyQt4.QtCore import Qt,QObject
-from PyQt4.QtGui import *
-from PyQt4 import QtCore
+from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
 
 
 class Communicate(QObject):
