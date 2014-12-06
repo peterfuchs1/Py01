@@ -1,58 +1,66 @@
 __author__ = 'uhs374h'
 import sys
-from PyQt5 import QtGui, QtCore, QtWidgets, QtSql
-from . import MyView
-#import Model
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from qt.mvc import MyView
+
 
 FIRST, LAST, PREVIOUS, NEXT = range(4)
 
-class Controller(QtWidgets.QDialog):
+class Controller(QWidget):
 
     def __init__(self, parent = None):
         super().__init__(parent)
-        self.current=0;
-        self.myDlg = MyView.Ui_Dialog()
-        self.myDlg.setupUi(self)
+        self.current = 0
+        self.myForm = MyView.Ui_Form()
+        self.myForm.setupUi(self)
         self.myButtons = {
-            self.myDlg.pButton0: 0,
-            self.myDlg.pButton1: 1,
-            self.myDlg.pButton2: 2,
-            self.myDlg.pButton3: 3,
-            self.myDlg.pButton4: 4,
-            self.myDlg.pButton5: 5,
-            self.myDlg.pButton6: 6,
-            self.myDlg.pButton7: 7,
-            self.myDlg.pButton8: 8,
-            self.myDlg.pButton9: 9,
-            self.myDlg.pButton10: 10,
-            self.myDlg.pButton11: 11,
-            self.myDlg.pButton12: 12,
-            self.myDlg.pButton13: 13,
-            self.myDlg.pButton14: 14
+            self.myForm.pButton0: 0,
+            self.myForm.pButton1: 1,
+            self.myForm.pButton2: 2,
+            self.myForm.pButton3: 3,
+            self.myForm.pButton4: 4,
+            self.myForm.pButton5: 5,
+            self.myForm.pButton6: 6,
+            self.myForm.pButton7: 7,
+            self.myForm.pButton8: 8,
+            self.myForm.pButton9: 9,
+            self.myForm.pButton10: 10,
+            self.myForm.pButton11: 11,
+            self.myForm.pButton12: 12,
+            self.myForm.pButton13: 13,
+            self.myForm.pButton14: 14
         }
-        self.connectButtons()
-        """
-        self.dbModel = Model.DBModel("mydb", "localhost", "root", "", "person")
+        self.myForm.pButton0.clicked.connect(lambda: self.navigate(self.myForm.pButton0))
+        self.myForm.pButton1.clicked.connect(lambda: self.navigate(self.myForm.pButton1))
+        self.myForm.pButton2.clicked.connect(lambda: self.navigate(self.myForm.pButton2))
+        self.myForm.pButton3.clicked.connect(lambda: self.navigate(self.myForm.pButton3))
+        self.myForm.pButton4.clicked.connect(lambda: self.navigate(self.myForm.pButton4))
+        self.myForm.pButton5.clicked.connect(lambda: self.navigate(self.myForm.pButton5))
+        self.myForm.pButton6.clicked.connect(lambda: self.navigate(self.myForm.pButton6))
+        self.myForm.pButton7.clicked.connect(lambda: self.navigate(self.myForm.pButton7))
+        self.myForm.pButton8.clicked.connect(lambda: self.navigate(self.myForm.pButton8))
+        self.myForm.pButton9.clicked.connect(lambda: self.navigate(self.myForm.pButton9))
+        self.myForm.pButton10.clicked.connect(lambda: self.navigate(self.myForm.pButton10))
+        self.myForm.pButton11.clicked.connect(lambda: self.navigate(self.myForm.pButton11))
+        self.myForm.pButton12.clicked.connect(lambda: self.navigate(self.myForm.pButton12))
+        self.myForm.pButton13.clicked.connect(lambda: self.navigate(self.myForm.pButton13))
+        self.myForm.pButton14.clicked.connect(lambda: self.navigate(self.myForm.pButton14))
 
-        # create a model that reads from "Person" table in db "MyDB"
-        self.tblRowCount = self.dbModel.modelRowCount
+        self.myForm.pOk.clicked.connect(self.start)
+        self.myForm.pCancel.clicked.connect(QCoreApplication.instance().quit)
+        self.start()
+        #self.connectButtons()
 
-        self.modelRowCount = self.dbModel.getModelRowCount()
-        """
-        # map the dlg fields to the db fields
-        self.mapper = QtWidgets.QDataWidgetMapper(self)
-        self.mapper.setSubmitPolicy(QtWidgets.QDataWidgetMapper.ManualSubmit)
-        self.mapper.setModel(self.dbModel.model)
-        self.mapper.addMapping(self.myDlg.lineEdit, 0)
-        self.mapper.addMapping(self.myDlg.lineEdit_2, 1)
-        self.mapper.addMapping(self.myDlg.lineEdit_3, 2)
-        self.mapper.toFirst()
-
+    def start(self):
+        self.initiate()
+        print("start")
         self.setButtonsEnabled()
 
     def connectButtons(self):
-        for buttons in self.myButtons.keys():
-            buttons.clicked.connect(lambda: self.navigate(self.myButtons[buttons]))
+        for button in self.myButtons.keys():
+            z = lambda: self.navigate(button)
+            button.clicked.connect(z)
 
     def initiate(self):
 
@@ -62,91 +70,37 @@ class Controller(QtWidgets.QDialog):
         buttons = set()
         for button in self.myButtons.keys():
             buttons.add(button)
+
         listAll = [x for x in buttons]
-        # Alle Buttons entfernt
-        for button in self.myButtons.keys():
-            self.myDlg.gridLayout_2.removeWidget(button)
 
-        count = len(self.myButtons.keys())
-        columns = 3
-        rows = count / 5
         z = 0
-        for i in range(rows):
-            for j in range(columns):
-                actual = listAll[z]
-                self.myButtons[actual] = z
-                self.myDlg.gridLayout_2.addWidget(actual, i, j)
-                z += 1
+        for actual in listAll:
+            actual.setText(str(z))
+            z += 1
 
+        self.current = 0
 
-    def navigate(self, value):
+    def navigate(self, key):
+        value = int(key.text())
+        print("key: %s value %s" %(key, value))
+        if self.current == int(value):
+            key.setEnabled(False)
+            self.current += 1
 
-        clicked=self
-
-
-        self.setButtonsEnabled()
 
     def setButtonsEnabled(self):
-        intCurrentIndex = self.mapper.currentIndex()
 
-        if self.modelRowCount == 1:
-            self.myDlg.pbPrevious.setEnabled(False)
-            self.myDlg.pbNext.setEnabled(False)
-            self.myDlg.pbLast.setEnabled(False)
-            self.myDlg.pbFirst.setEnabled(False)
-        if intCurrentIndex == 0:
-            self.myDlg.pbPrevious.setEnabled(False)
-            self.myDlg.pbNext.setEnabled(True)
-            self.myDlg.pbLast.setEnabled(True)
-            self.myDlg.pbFirst.setEnabled(False)
-        elif intCurrentIndex == self.modelRowCount - 1:
-            self.myDlg.pbPrevious.setEnabled(True)
-            self.myDlg.pbNext.setEnabled(False)
-            self.myDlg.pbLast.setEnabled(False)
-            self.myDlg.pbFirst.setEnabled(True)
-        else:
-            self.myDlg.pbPrevious.setEnabled(True)
-            self.myDlg.pbNext.setEnabled(True)
-            self.myDlg.pbLast.setEnabled(True)
-            self.myDlg.pbFirst.setEnabled(True)
+        for button in self.myButtons.keys():
+            button.setEnabled(True)
+        self.current = 0
 
-    def quit(self):
-        self.mapper.submit()
-        QtWidgets.QDialog.accept(self.myDlg)
 
-    def addRecord(self):
-        self.mapper.submit()
-        self.dbModel.insertRow()
-        self.mapper.setCurrentIndex(self.modelRowCount + 1)
 
-        self.modelRowCount += 1
-        self.myDlg.lineEdit.setText(str(self.modelRowCount + 1))
-        self.myDlg.lineEdit_2.setText("")
-        self.myDlg.lineEdit_3.setText("")
-        self.setButtonsEnabled()
 
-        self.myDlg.lineEdit_2.setFocus()
 
-        self.dbModel.getMaxId()
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    c = Controller()
+    c.show()
+    sys.exit(app.exec_())
 
-    def deleteRecord(self):
-        intCrntRow = self.mapper.currentIndex()
-
-        if QtWidgets.QMessageBox.question(self, "Confirmation", """Are you sure you want to delete             the person
-            {0} {1} ?""".format(self.lineEdit_2.text(), self.lineEdit_3.text())) == QtWidgets.QMessageBox.No:
-           return
-
-        self.dbModel.deleteRowByIndex(intCrntRow)
-
-        if intCrntRow - 1 < 0:
-            intCrntRow += 1
-        else:
-            intCrntRow -= 1
-
-        self.mapper.setCurrentIndex(intCrntRow)
-
-        self.setButtonsEnabled()
-
-    def openId(self):
-        self.dbModel.getDataForId(7)
-        self.mapper.toFirst()

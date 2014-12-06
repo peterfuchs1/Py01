@@ -13,6 +13,7 @@ __license__ = "Python"
 
 from roman.Exceptions import *
 
+
 class Roman(object):
     """Roman numbers representation
 
