@@ -70,13 +70,12 @@ class MyController(QWidget):
         :return: None
         """
         self.close()
-
-    def closeApplication(self):
+    @staticmethod
+    def closeApplication():
         """ The whole application will be closed
 
         :return: None
         """
-        # yes - I know, this could be a static method
         QCoreApplication.instance().quit()
 
     def connectButtons(self):
