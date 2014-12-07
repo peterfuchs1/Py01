@@ -1,106 +1,159 @@
+"""
+Created on 07.12.2014
+
+@author: uhs374h
+"""
 __author__ = 'uhs374h'
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from qt.mvc import MyView
+from random import shuffle
 
 
-FIRST, LAST, PREVIOUS, NEXT = range(4)
+class MyController(QWidget):
+    """ MVC pattern: Creates a controller with the mvc pattern.
 
-class Controller(QWidget):
+    """
+    def __init__(self, parent=None):
+        """ Create a new controller with a MyView object
+        using the MVC pattern
 
-    def __init__(self, parent = None):
+        :param parent:
+        :return: None
+        """
         super().__init__(parent)
         self.current = 0
         self.myForm = MyView.Ui_Form()
         self.myForm.setupUi(self)
-        self.myButtons = {
-            self.myForm.pButton0: 0,
-            self.myForm.pButton1: 1,
-            self.myForm.pButton2: 2,
-            self.myForm.pButton3: 3,
-            self.myForm.pButton4: 4,
-            self.myForm.pButton5: 5,
-            self.myForm.pButton6: 6,
-            self.myForm.pButton7: 7,
-            self.myForm.pButton8: 8,
-            self.myForm.pButton9: 9,
-            self.myForm.pButton10: 10,
-            self.myForm.pButton11: 11,
-            self.myForm.pButton12: 12,
-            self.myForm.pButton13: 13,
-            self.myForm.pButton14: 14
-        }
-        self.myForm.pButton0.clicked.connect(lambda: self.navigate(self.myForm.pButton0))
-        self.myForm.pButton1.clicked.connect(lambda: self.navigate(self.myForm.pButton1))
-        self.myForm.pButton2.clicked.connect(lambda: self.navigate(self.myForm.pButton2))
-        self.myForm.pButton3.clicked.connect(lambda: self.navigate(self.myForm.pButton3))
-        self.myForm.pButton4.clicked.connect(lambda: self.navigate(self.myForm.pButton4))
-        self.myForm.pButton5.clicked.connect(lambda: self.navigate(self.myForm.pButton5))
-        self.myForm.pButton6.clicked.connect(lambda: self.navigate(self.myForm.pButton6))
-        self.myForm.pButton7.clicked.connect(lambda: self.navigate(self.myForm.pButton7))
-        self.myForm.pButton8.clicked.connect(lambda: self.navigate(self.myForm.pButton8))
-        self.myForm.pButton9.clicked.connect(lambda: self.navigate(self.myForm.pButton9))
-        self.myForm.pButton10.clicked.connect(lambda: self.navigate(self.myForm.pButton10))
-        self.myForm.pButton11.clicked.connect(lambda: self.navigate(self.myForm.pButton11))
-        self.myForm.pButton12.clicked.connect(lambda: self.navigate(self.myForm.pButton12))
-        self.myForm.pButton13.clicked.connect(lambda: self.navigate(self.myForm.pButton13))
-        self.myForm.pButton14.clicked.connect(lambda: self.navigate(self.myForm.pButton14))
+        # connect the buttons with the clicked signal
+        self.connectButtons()
 
-        self.myForm.pOk.clicked.connect(self.start)
-        self.myForm.pCancel.clicked.connect(QCoreApplication.instance().quit)
+        self.liste = [
+            self.myForm.pButton0,
+            self.myForm.pButton1,
+            self.myForm.pButton2,
+            self.myForm.pButton3,
+            self.myForm.pButton4,
+            self.myForm.pButton5,
+            self.myForm.pButton6,
+            self.myForm.pButton7,
+            self.myForm.pButton8,
+            self.myForm.pButton9,
+            self.myForm.pButton10,
+            self.myForm.pButton11,
+            self.myForm.pButton12,
+            self.myForm.pButton13,
+            self.myForm.pButton14
+        ]
+        self.open = 0
+        self.correct = 0
+        self.wrong = 0
+        self.sum = len(self.liste)
+        self.games = 0
+
         self.start()
-        #self.connectButtons()
 
     def start(self):
+        """ Start a new game
+
+        :return: None
+        """
         self.initiate()
-        print("start")
+        self.myForm.lGames.setText(str(self.games))
         self.setButtonsEnabled()
 
     def connectButtons(self):
-        for button in self.myButtons.keys():
-            z = lambda: self.navigate(button)
-            button.clicked.connect(z)
+        """ Connect the signal clicked with the buttons
+
+        :return: None
+        """
+        self.myForm.pButton0.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton0))
+        self.myForm.pButton1.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton1))
+        self.myForm.pButton2.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton2))
+        self.myForm.pButton3.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton3))
+        self.myForm.pButton4.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton4))
+        self.myForm.pButton5.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton5))
+        self.myForm.pButton6.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton6))
+        self.myForm.pButton7.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton7))
+        self.myForm.pButton8.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton8))
+        self.myForm.pButton9.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton9))
+        self.myForm.pButton10.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton10))
+        self.myForm.pButton11.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton11))
+        self.myForm.pButton12.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton12))
+        self.myForm.pButton13.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton13))
+        self.myForm.pButton14.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton14))
+
+        self.myForm.pNew.clicked.connect(self.start)
+        self.myForm.pExit.clicked.connect(QCoreApplication.instance().quit)
 
     def initiate(self):
-
         """ initiate all to begin a new game
 
+        :return: None
         """
-        buttons = set()
-        for button in self.myButtons.keys():
-            buttons.add(button)
+        self.open = len(self.liste)
+        self.correct = 0
+        self.wrong = 0
 
-        listAll = [x for x in buttons]
+        self.sum = 0
+        self.games += 1
+
+        shuffle(self.liste)
 
         z = 0
-        for actual in listAll:
+        for actual in self.liste:
             actual.setText(str(z))
             z += 1
-
         self.current = 0
+        self.printScores()
 
-    def navigate(self, key):
+    def buttonClicked(self, key):
+        """ evaluate the clicked PushButton
+
+        :param key: Signal of the clicked PushButton
+        :return: None
+        """
         value = int(key.text())
-        print("key: %s value %s" %(key, value))
         if self.current == int(value):
             key.setEnabled(False)
+            self.correct += 1
+            self.open -= 1
             self.current += 1
+        else:
+            self.wrong += 1
+        self.sum += 1
+        self.printScores()
+        # print a MessagesBox for the winner
+        if self.open == 0:
+            q = QMessageBox()
+            q.setWindowTitle("Gewonnen")
+            q.setText("<b><center>Gratulation!<center></b>")
+            q.setTextFormat(Qt.RichText)
+            q.setInformativeText("Du hast die Lösung in %d Schritten gefunden." % self.sum)
+            q.exec()
 
+    def printScores(self):
+        """ print the current Scores
+
+        :return: None
+        """
+        self.myForm.lCorrect.setText(str(self.correct))
+        self.myForm.lOPen.setText(str(self.open))
+        self.myForm.lWrong.setText(str(self.wrong))
+        self.myForm.lSum.setText((str(self.sum)))
+        self.myForm.lGames.setText(str(self.games))
 
     def setButtonsEnabled(self):
-
-        for button in self.myButtons.keys():
+        """ Enables all Buttons
+        :return: None
+        """
+        for button in self.liste:
             button.setEnabled(True)
-        self.current = 0
-
-
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    c = Controller()
+    c = MyController()
     c.show()
     sys.exit(app.exec_())
 
