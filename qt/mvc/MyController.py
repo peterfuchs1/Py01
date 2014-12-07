@@ -26,9 +26,7 @@ class MyController(QWidget):
         self.current = 0
         self.myForm = MyView.Ui_Form()
         self.myForm.setupUi(self)
-        # connect the buttons with the clicked signal
-        self.connectButtons()
-
+        # collect all buttons in a list
         self.liste = [
             self.myForm.pButton0,
             self.myForm.pButton1,
@@ -46,12 +44,15 @@ class MyController(QWidget):
             self.myForm.pButton13,
             self.myForm.pButton14
         ]
+        # connect the buttons with the clicked signal
+        self.connectButtons()
+        # initialize all attributes in __init__
         self.open = 0
         self.correct = 0
         self.wrong = 0
         self.sum = len(self.liste)
         self.games = 0
-
+        # start a new game
         self.start()
 
     def start(self):
@@ -63,29 +64,31 @@ class MyController(QWidget):
         self.myForm.lGames.setText(str(self.games))
         self.setButtonsEnabled()
 
-    def connectButtons(self):
-        """ Connect the signal clicked with the buttons
+    def closeGUI(self):
+        """ The active QWidget will be closed
 
         :return: None
         """
-        self.myForm.pButton0.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton0))
-        self.myForm.pButton1.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton1))
-        self.myForm.pButton2.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton2))
-        self.myForm.pButton3.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton3))
-        self.myForm.pButton4.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton4))
-        self.myForm.pButton5.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton5))
-        self.myForm.pButton6.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton6))
-        self.myForm.pButton7.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton7))
-        self.myForm.pButton8.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton8))
-        self.myForm.pButton9.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton9))
-        self.myForm.pButton10.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton10))
-        self.myForm.pButton11.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton11))
-        self.myForm.pButton12.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton12))
-        self.myForm.pButton13.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton13))
-        self.myForm.pButton14.clicked.connect(lambda: self.buttonClicked(self.myForm.pButton14))
+        self.close()
+
+    def closeApplication(self):
+        """ The whole application will be closed
+
+        :return: None
+        """
+        # yes - I know, this could be a static method
+        QCoreApplication.instance().quit()
+
+    def connectButtons(self):
+        """ Connect the clicked signal with the buttons
+
+        :return: None
+        """
+        for b in self.liste:
+            b.clicked.connect(self.buttonClicked)
 
         self.myForm.pNew.clicked.connect(self.start)
-        self.myForm.pExit.clicked.connect(QCoreApplication.instance().quit)
+        self.myForm.pExit.clicked.connect(self.closeGUI)
 
     def initiate(self):
         """ initiate all to begin a new game
@@ -98,9 +101,9 @@ class MyController(QWidget):
 
         self.sum = 0
         self.games += 1
-
+        # create a new sequence
         shuffle(self.liste)
-
+        # update the text of the buttons
         z = 0
         for actual in self.liste:
             actual.setText(str(z))
@@ -108,15 +111,19 @@ class MyController(QWidget):
         self.current = 0
         self.printScores()
 
-    def buttonClicked(self, key):
+    def buttonClicked(self):
         """ evaluate the clicked PushButton
 
-        :param key: Signal of the clicked PushButton
+        :raise TypeError: If the sender is not a instance of QPushButton
         :return: None
         """
-        value = int(key.text())
+        button = self.sender()
+        if isinstance(button, QPushButton):
+            value = int(button.text())
+        else:
+            raise TypeError('QPushButton expected, but '+type(button)+' was given')
         if self.current == int(value):
-            key.setEnabled(False)
+            button.setEnabled(False)
             self.correct += 1
             self.open -= 1
             self.current += 1
@@ -146,6 +153,7 @@ class MyController(QWidget):
 
     def setButtonsEnabled(self):
         """ Enables all Buttons
+
         :return: None
         """
         for button in self.liste:
