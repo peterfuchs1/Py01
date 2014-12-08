@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'MyGame.ui'
 #
-# Created: Sun Dec  7 09:05:47 2014
+# Created: Sun Dec  7 17:20:10 2014
 #      by: PyQt5 UI code generator 5.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(510, 166)
+        Form.resize(619, 229)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -221,6 +221,7 @@ class Ui_Form(object):
         self.horizontalLayout_3.addLayout(self.gridLayout)
 
         self.retranslateUi(Form)
+        self.pExit.clicked.connect(Form.close)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):

@@ -7,7 +7,7 @@ __author__ = 'uhs374h'
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from qt.mvc import MyView
+from qt.mvc import MyView, MyModel
 from random import shuffle
 
 
@@ -26,6 +26,7 @@ class MyController(QWidget):
         self.current = 0
         self.myForm = MyView.Ui_Form()
         self.myForm.setupUi(self)
+
         # collect all buttons in a list
         self.liste = [
             self.myForm.pButton0,
@@ -44,14 +45,11 @@ class MyController(QWidget):
             self.myForm.pButton13,
             self.myForm.pButton14
         ]
+
+        self.myModel = MyModel.MyModel(len(self.liste))
+
         # connect the buttons with the clicked signal
         self.connectButtons()
-        # initialize all attributes in __init__
-        self.open = 0
-        self.correct = 0
-        self.wrong = 0
-        self.sum = len(self.liste)
-        self.games = 0
         # start a new game
         self.start()
 
@@ -61,7 +59,7 @@ class MyController(QWidget):
         :return: None
         """
         self.initiate()
-        self.myForm.lGames.setText(str(self.games))
+        self.myForm.lGames.setText(self.myModel.gamesStr())
         self.setButtonsEnabled()
 
     def closeGUI(self):
@@ -87,19 +85,23 @@ class MyController(QWidget):
             b.clicked.connect(self.buttonClicked)
 
         self.myForm.pNew.clicked.connect(self.start)
-        self.myForm.pExit.clicked.connect(self.closeGUI)
+        # the designer creates the code!
+        # self.myForm.pExit.clicked.connect(self.closeGUI)
+
+    def writeLabel(self):
+        """ print the text of the sender into a label only once
+        :return: None
+        """
+        b = self.sender()
+        self.myForm.label.setText(b.text())
+        b.clicked.disconnect(self.writeLabel)
 
     def initiate(self):
         """ initiate all to begin a new game
 
         :return: None
         """
-        self.open = len(self.liste)
-        self.correct = 0
-        self.wrong = 0
-
-        self.sum = 0
-        self.games += 1
+        self.myModel.newGame()
         # create a new sequence
         shuffle(self.liste)
         # update the text of the buttons
@@ -123,20 +125,19 @@ class MyController(QWidget):
             raise TypeError('QPushButton expected, but '+type(button)+' was given')
         if self.current == int(value):
             button.setEnabled(False)
-            self.correct += 1
-            self.open -= 1
+            self.myModel.correctClick()
             self.current += 1
         else:
-            self.wrong += 1
-        self.sum += 1
+            self.myModel.wrongClick()
+
         self.printScores()
         # print a MessagesBox for the winner
-        if self.open == 0:
+        if self.myModel.open == 0:
             q = QMessageBox()
             q.setWindowTitle("Gewonnen")
             q.setText("<b><center>Gratulation!<center></b>")
             q.setTextFormat(Qt.RichText)
-            q.setInformativeText("Du hast die Lösung in %d Schritten gefunden." % self.sum)
+            q.setInformativeText("Du hast die Lösung in %s Schritten gefunden." % self.myModel.sumStr())
             q.exec()
 
     def printScores(self):
@@ -144,11 +145,13 @@ class MyController(QWidget):
 
         :return: None
         """
-        self.myForm.lCorrect.setText(str(self.correct))
-        self.myForm.lOPen.setText(str(self.open))
-        self.myForm.lWrong.setText(str(self.wrong))
-        self.myForm.lSum.setText((str(self.sum)))
-        self.myForm.lGames.setText(str(self.games))
+        _model = self.myModel
+        self.myForm.lCorrect.setText(_model.correctStr())
+        self.myForm.lOPen.setText(_model.openStr())
+        self.myForm.lWrong.setText(_model.wrongStr())
+        self.myForm.lSum.setText(_model.sumStr())
+        self.myForm.lGames.setText(_model.gamesStr())
+
 
     def setButtonsEnabled(self):
         """ Enables all Buttons

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>510</width>
-    <height>166</height>
+    <width>619</width>
+    <height>229</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -376,5 +376,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pExit</sender>
+   <signal>clicked()</signal>
+   <receiver>Form</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>447</x>
+     <y>179</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>309</x>
+     <y>114</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
