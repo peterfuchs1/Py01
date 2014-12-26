@@ -8,6 +8,7 @@ from pygame.event import *
 from pygame.locals import *
 
 verticies = (
+    # start of the cube
     (1, -1, -1),
     (1, 1, -1),
     (-1, 1, -1),
@@ -15,10 +16,19 @@ verticies = (
     (1, -1, 1),
     (1, 1, 1),
     (-1, -1, 1),
-    (-1, 1, 1)
+    (-1, 1, 1),
+    # start of the octahedron
+    (0, 0, -1),
+    (1, 0, 0),
+    (-1, 0, 0),
+    (0, 0, 1),
+    (0, 1, 0),
+    (0, -1, 0),
+
 )
 
 edges = (
+    # start of the cube
     (0, 1),
     (0, 3),
     (0, 4),
@@ -31,6 +41,19 @@ edges = (
     (5, 1),
     (5, 4),
     (5, 7),
+    # start of the octahedron
+    (8, 9),
+    (8, 10),
+    (9, 11),
+    (10, 11),
+    (8, 12),
+    (9, 12),
+    (10, 12),
+    (11, 12),
+    (8, 13),
+    (9, 13),
+    (10, 13),
+    (11, 13),
 )
 
 surfaces = (
