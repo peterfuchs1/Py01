@@ -3,6 +3,7 @@ Created on 07.07.2014
 
 @author: uhs374h
 """
+from IPython.nbformat import current
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame, sys, math, datetime
@@ -12,9 +13,10 @@ class MyClock:
     '''
     MyClock is a OpenGL analog clock
     '''
-    def __init__(self, analog=True):
+    def __init__(self, analog=True, background=True):
     # Attribute
-        self.analog=analog # Soll der Sokundenzeiger analog dargestellt werden?
+        self.background = background # Soll der Hintergrund angezeigt werden?
+        self.analog = analog # Soll der Sokundenzeiger analog dargestellt werden?
         self.windowMargin = 30
         self.windowWidth = 600
         self.windowHeight = self.windowWidth
@@ -60,7 +62,7 @@ class MyClock:
                 break
             self.draw()
             pygame.display.flip()
-            frames = frames+1
+            frames += 1
         print( "fps: %d" % ((frames*1000)/(pygame.time.get_ticks()-ticks)))
     
     
@@ -101,10 +103,13 @@ class MyClock:
         glBegin(GL_TRIANGLE_STRIP)
         for i in range(numCircleVertices):
             angle = (i / float(numCircleVertices-2)) * 2 * math.pi;
+            currentRadius = innerRadius if inner else outerRadius
+            """
             if inner:
                 currentRadius = innerRadius
             else:
                 currentRadius = outerRadius
+            """
             x = math.cos(angle) * currentRadius
             y = math.sin(angle) * currentRadius
             inner = not inner
@@ -136,6 +141,27 @@ class MyClock:
         self.drawPointer(0.08, 2.0, showSecond, 60)
 
     def drawClockFace(self):
+
+        for minute in range(60):
+            angle = float(minute)/60*360.0
+            glRotatef(+angle, 0.0, 0.0, 1.0)
+            # Ganze 5 Minuten werden dicker dargestellt
+            # und länger
+            big = minute % 5 == 0
+            if big:
+                glColor4f(0.4, 0.7, 0.9, 1.0)
+            else:
+                glColor4f(1.0, 1.0, 0.0, 1.0)
+            glBegin(GL_QUADS)
+            x, y = (0.05, 1.5) if big else (0.01, 1.7)
+            glVertex3f(-0.01, y, 0.0)
+            glVertex3f(+0.01, y, 0.0)
+            glVertex3f(+x, 1.9, 0.0)
+            glVertex3f(-x, 1.9, 0.0)
+            glEnd()
+            glRotate(-angle, 0.0, 0.0, 1.0)
+
+        """
         for hour in range(12):
             angle = float(hour)/12*360.0
             glColor4f(0.4, 0.7, 0.9, 1.0)
@@ -147,21 +173,26 @@ class MyClock:
             glVertex3f(-0.05, 1.9, 0.0)
             glEnd()
             glRotate(-angle, 0.0, 0.0, 1.0)
-    
+        """
     def drawClockBackground(self,hour, minute, second):
-        glBegin(GL_TRIANGLE_FAN)
+
+        glBegin(GL_POLYGON)
         # center of the fan with last used color
-        glVertex3f(0.0, 0.0, 0.0)
-        numCircleVertices = 30
+        #glVertex3f(0.0, 0.0, 0.0)
+        numCircleVertices = 300
         clockRadius = 2.0
+
         for i in range(numCircleVertices):
-            angle = (i / float(numCircleVertices-1)) * 2 * math.pi;
+            angle = (i / float(numCircleVertices-1)) * 2 * math.pi
             x = math.cos(angle) * clockRadius
             y = math.sin(angle) * clockRadius
             # red, green, blue in relation to the current time
-            glColor4f(second/60.0, minute/60.0, hour/12.0, 1.0)
+            glColor4f(second/60.0, minute/60.0, hour/24.0, 1.0)
+            #glColor4f(1, 1, 1, 1.0)
             glVertex3f(x, y, 0.0)
         glEnd()
+
+
     def clockRotate(self, second, micro, start, stop, rotation):
         x, y, z = rotation
         
@@ -169,12 +200,17 @@ class MyClock:
                          micro/1000000.0)/(stop-start)*360.0
         # new handling for Lighting
         glEnable(GL_LIGHTING)
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
+        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
         glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.9, 0.9, 0.9, 1.0])
-        glLightfv(GL_LIGHT0, GL_POSITION, [0.0, 0.0, -6.0, 1.0])
+        glLightfv(GL_LIGHT0, GL_POSITION, [-2, -2, -1.0, 1.0])
         glEnable(GL_LIGHT0)
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
+        glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
+        glEnable(GL_TEXTURE_GEN_S)
+        glEnable(GL_TEXTURE_GEN_T)
+
         glEnable(GL_NORMALIZE)
         if 90 < clockRotation < 270:
             # invert the normal vector
@@ -204,10 +240,12 @@ class MyClock:
             self.clockRotate(second, micro, 30, 40, (0.0, 1.0, 0.0))
         
     # Drehung der Uhr
-        if second >= 58:
-            self.clockRotate(second, micro, 58.0,60.0, (1.0, 0.0, 0.0))
+        if second >= 50:
+            self.clockRotate(second, micro, 50.0, 58, (1.0, 1.0, 0.0))
       
         # Zeichnen der Uhr
+        if self.background:
+            self.drawClockBackground(hour, minute, second)
         self.drawClockFace()
         self.drawCurrentTime(hour, minute, second, micro)
         self.drawRing(2.0, 0.1, -0.1)
@@ -232,4 +270,4 @@ class MyClock:
 
 
 if __name__ == '__main__':
-    MyClock(analog=False)
+    MyClock(analog=False, background=False)
