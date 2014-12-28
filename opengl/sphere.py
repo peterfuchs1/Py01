@@ -3,8 +3,7 @@ import pygame
 __author__ = 'uhs374h'
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from pygame.display import *
-from pygame.event import *
+from pygame import *
 from pygame.locals import *
 
 from math import *
@@ -19,10 +18,10 @@ class Figur:
         self.done = False
         pygame.init()
         self.display = (800, 600)
-        set_mode(self.display, DOUBLEBUF | OPENGL)
+        display.set_mode(self.display, DOUBLEBUF | OPENGL)
         gluPerspective(45.0, (self.display[0] / self.display[1]), 0.1, 50)
         # moving back.
-        glTranslatef(0.0, 0.0, -8.0)
+        glTranslatef(0.5, 0.5, -8.0)
         # where we might be
         glRotatef(10, 1, 1, 1)
 
@@ -31,27 +30,26 @@ class Figur:
             glRotatef(1, 0, 0, 1)
             # Farbbuffer und Tiefenpuffer entleeren
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-            event = pygame.event.poll()
-            if event.type == QUIT or self.done:
-                pygame.quit()
-                exit()
-            self.input(event)
+            # events abfragen
+            self.input()
             # merke die aktuelle Matrix
             glPushMatrix()
             glTranslatef(self.x, self.y, self.z)
             self.draw_figur()
             glPopMatrix()
-            flip()
+            self.draw_light()
+            display.flip()
             pygame.time.wait(10)
 
-
-    def createSphere(self):
+    def draw_figur(self):
+        # blaugrau
         glColor3f(0, 0.6, 1)
+        # zeichne eine Kugel mit Radius 1
+        # im Zentrum
         gluSphere(gluNewQuadric(), 1, 50, 50)
 
-    def draw_figur(self):
-        self.createSphere()
-        # new handling for Lighting
+    def draw_light(self):
+        # handling for Lighting
         glEnable(GL_LIGHTING)
         glLightfv(GL_LIGHT0, GL_AMBIENT, [0.3, 0.3, 0.3, 0.0])
         glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.9, 0.9, 0.9, 0.0])
@@ -65,15 +63,18 @@ class Figur:
         glEnable(GL_TEXTURE_GEN_S)
         glEnable(GL_TEXTURE_GEN_T)
 
-    def input(self, me):
-        kpb = pygame.key.get_pressed()  # keyboard pressed buttons
+    def input(self):
+        ev = pygame.event.poll()
+        if ev.type == QUIT or self.done:
+            pygame.quit()
+            exit()
 
-        #me = pygame.event.wait()
-        if me.type == MOUSEBUTTONDOWN:
-            if me.button == 4:
+        if ev.type == MOUSEBUTTONDOWN:
+            if ev.button == 4:
                 self.z += self.c
-            elif me.button == 5:
+            elif ev.button == 5:
                 self.z -= self.c
+        kpb = pygame.key.get_pressed()  # keyboard pressed buttons
 
         if kpb[K_ESCAPE]:
             self.done = True
@@ -87,34 +88,6 @@ class Figur:
             self.x += self.c
         if kpb[K_LEFT]:
             self.x -= self.c
-
-    def get_events(self):
-        for event in get():
-            if event.type == pygame.K_LEFT:
-                self.x = -self.c
-            elif event.type == pygame.K_RIGHT:
-                self.x = self.c
-            elif event.type == pygame.KEYUP:
-                self.y = self.c
-                self.x = self.c
-            elif event.type == pygame.KEYDOWN:
-                self.y = -self.c
-                self.x = -self.c
-            elif event.type == pygame.K_END:
-                glLoadIdentity()
-            elif event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
-                pygame.quit()
-                exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(event)
-                print(event.button)
-                if event.button == 4:
-                    # Herauszoomen z += 1
-                    self.z = self.c
-                elif event.button == 5:
-                    # Hineinzoomen z -= 1
-                    self.z = -self.c
-
 
 if __name__ == '__main__':
     s = Figur()
