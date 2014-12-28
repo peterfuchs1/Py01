@@ -84,9 +84,9 @@ if __name__ == '__main__':
     while True:
         get_events()
         glRotatef(1, 0, 1, 0)
-        glScalef(1.001, 1, 1)
+        glScalef(1.0001, 1.0001, 1.0001)
         # Farbbuffer und Tiefenpuffer entleeren
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         draw_figur()
         flip()
         pygame.time.wait(10)
