@@ -31,6 +31,7 @@ class Figur:
         pygame.init()
         self.display = (800, 600)
         display.set_mode(self.display, DOUBLEBUF | OPENGL)
+        glShadeModel(GL_SMOOTH)
         gluPerspective(45.0, (self.display[0] / self.display[1]), 0.1, 50)
         # moving back.
         glTranslatef(0.5, 0.5, -8.0)
@@ -42,10 +43,12 @@ class Figur:
 
         """
         while True:
-
             # events abfragen
             self.input()
+            if self.done:
+                break
             if not self.paused:
+                # Unsere Figur wird um 1° um die z-Achse gedreht
                 glRotatef(1, 0, 0, 1)
                 # Farbbuffer und Tiefenpuffer entleeren
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -56,9 +59,13 @@ class Figur:
                 glPopMatrix()
                 self.draw_light()
                 display.flip()
+            # pause the program for an amount of time
             pygame.time.wait(10)
+        # quit pygame and exit the application
+        pygame.quit()
 
-    def draw_figur(self):
+    @staticmethod
+    def draw_figur():
         """ Erzeugt eine Kugel im Zentrum (0,0,0)
 
         """
@@ -68,7 +75,8 @@ class Figur:
         # im Zentrum
         gluSphere(gluNewQuadric(), 1, 50, 50)
 
-    def draw_light(self):
+    @staticmethod
+    def draw_light():
         """ Erstellt eine Lichtquelle Light0
 
         """
@@ -91,9 +99,9 @@ class Figur:
 
         """
         ev = pygame.event.poll()
-        if ev.type == QUIT or self.done:
-            pygame.quit()
-            exit()
+        if ev.type == QUIT:
+            self.done = True
+            return
 
         if ev.type == MOUSEBUTTONDOWN:
             if ev.button == 4:
@@ -117,13 +125,11 @@ class Figur:
             self.x += self.c
         elif kpb[K_LEFT]:
             self.x -= self.c
-        elif kpb[K_KP_PLUS]: # vergrößern um 0.1%
+        elif kpb[K_KP_PLUS]:  # vergrößern um 0.1%
             glScalef(1.001, 1.001, 1.001)
-        elif kpb[K_KP_MINUS]: # verkleinern auf 99,9%
+        elif kpb[K_KP_MINUS]:  # verkleinern auf 99,9%
             glScalef(0.999, 0.999, 0.999)
 
 if __name__ == '__main__':
     s = Figur()
     s.loop()
-
-
