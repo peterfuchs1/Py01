@@ -109,7 +109,8 @@ def get_events():
                 # Hineinzoomen z -= 1
                 glTranslatef(0.0, 0.0, -1.0)
 
-if __name__ == '__main__':
+
+def main():
     pygame.init()
     display = (800, 600)
     set_mode(display, DOUBLEBUF | OPENGL)
@@ -130,3 +131,8 @@ if __name__ == '__main__':
         draw_cube()
         flip()
         pygame.time.wait(10)
+
+
+
+if __name__ == '__main__':
+    main()

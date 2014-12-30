@@ -59,7 +59,7 @@ class Figur:
                 glPopMatrix()
                 self.draw_light()
                 display.flip()
-            # pause the program for an amount of time
+            # pause the program for an amount of time [ms]
             pygame.time.wait(10)
         # quit pygame and exit the application
         pygame.quit()

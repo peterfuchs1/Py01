@@ -3,12 +3,11 @@ Created on 07.07.2014
 
 @author: uhs374h
 """
-from IPython.nbformat import current
+
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame, sys, math, datetime
 from pygame.locals import *
-#from pygame import *
 class MyClock:
     '''
     MyClock is a OpenGL analog clock
