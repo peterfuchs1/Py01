@@ -10,8 +10,9 @@ __version__ = "$Revision: 1.2 $"
 __date__ = "$Date: 2004/05/05 21:57:20 $"
 __copyright__ = "Copyright (c) 2001 Mark Pilgrim"
 __license__ = "Python"
+__path__ = '.'
 
-from roman.Exceptions import *
+from roman.Exceptions import *  # InvalidRomanNumeralError, OutOfRangeError, NotIntegerError, RomanError
 
 
 class Roman(object):
@@ -69,7 +70,7 @@ class Roman(object):
         """convert Roman numeral to integer"""
         if not s:
             raise InvalidRomanNumeralError ('Input can not be blank')
-        if not s in Roman.fromRomanTable:
+        if s not in Roman.fromRomanTable:
             raise InvalidRomanNumeralError ('Invalid Roman numeral: %s' % s)
         return Roman.fromRomanTable[s]
     @staticmethod
