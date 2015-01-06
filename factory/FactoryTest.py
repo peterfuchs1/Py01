@@ -1,8 +1,5 @@
 __author__ = 'uhs374h'
-
-from factory.Einkaufswagen import Einkaufswagen
-from factory.IEinkaufswagen import *
-from factory.SpezialFabrik import *
+from factory import *
 
 if __name__ == "__main__":
 	spinat = SpezialFabrik.erzeuge("TKSpinat")
