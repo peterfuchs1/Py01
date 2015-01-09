@@ -98,10 +98,32 @@ class MyDivCase(unittest.TestCase):
 		expected = liste[0]/liste[1]
 		self.assertEqual(expected, self.algorithm[3].execute(liste))
 
+	def test_Div_simpleTuple_DbyZero(self):
+		liste = (3,0)
+		self.assertRaises(ZeroDivisionError, self.algorithm[3].execute,liste)
+
+	def test_Div_simple_2_Arguments(self):
+		x,y = (3,4)
+		expected = x / y
+		self.assertEqual(expected, self.algorithm[3].execute(x,y))
+
+	def test_Div_simple_2_Arguments_last_0(self):
+		x,y = (3,0)
+		self.assertRaises(ZeroDivisionError, self.algorithm[3].execute,x,y)
+
+
 	def test_Div_3_parameter(self):
 		a, b, c = 2, 3, 4
 		expected = a/b/c
 		self.assertEqual(expected, self.algorithm[3].execute((a, b, c)))
+
+	def test_Div_3_parameter_DbyZero(self):
+		a, b, c = 2, 0, 4
+		self.assertRaises(ZeroDivisionError, self.algorithm[3].execute,a, b, c)
+
+	def test_Div_3_parameter_DbyZero_lastArgument(self):
+		a, b, c = 2, 3, 0
+		self.assertRaises(ZeroDivisionError, self.algorithm[3].execute,a, b, c)
 
 
 class MyModCase(unittest.TestCase):
