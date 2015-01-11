@@ -10,8 +10,8 @@ class Add(Strategy):
 		return __name__
 
 	def execute(self, var1=1, *args):
-		summe=0
-		t=type(var1)
+		summe = 0
+		t = type(var1)
 		if t == list or t == tuple:
 			summe = sum(var1)
 		elif t == int or t == float:

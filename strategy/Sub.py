@@ -11,7 +11,7 @@ class Sub(Strategy):
 
 	def execute(self, var1=1, *args):
 		t = type(var1)
-		diff=0
+		diff = 0
 		if t == list or t == tuple:
 			diff = var1[0]
 			for x in var1[1:]:

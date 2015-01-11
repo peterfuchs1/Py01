@@ -17,10 +17,10 @@ class Strategy(object, metaclass=ABCMeta):
 		:param args: a tuple of numeric values
 		:return: the result
 		"""
-		pass
+
 	@abstractmethod
 	def explaination(self):
 		""" explaination of the special strategy
+
 		:return: the explaination as a string
 		"""
-		pass
