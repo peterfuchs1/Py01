@@ -37,7 +37,7 @@ class Figur:
         glShadeModel(GL_SMOOTH)
         gluPerspective(45.0, (self.display[0] / self.display[1]), 0.1, 500)
         # moving back.
-        glTranslatef(0.5, 0.5, -8.0)
+        glTranslatef(0.5, -1.5, -6.0)
         # where we might be
         glRotatef(10, 1, 1, 1)
 
@@ -51,6 +51,7 @@ class Figur:
             if self.done:
                 break
             if not self.paused:
+                glDisable(GL_LIGHTING)
                 # Unsere Figur wird um 1° um die z-Achse gedreht
                 glRotatef(1, 0, 0, 1)
                 # glClearColor(0.5, 0.5, 0.5, 1)
@@ -63,26 +64,29 @@ class Figur:
                 # Farbbuffer und Tiefenpuffer entleeren
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
                 # merke die aktuelle Matrix
-                glPushMatrix()
+
                 # glLoadIdentity()
                 self.draw_sun()
+                glPushMatrix()
+
+                Figur.helperSetupLighting()
+                Figur.helperPlaceLight()
                 glTranslatef(self.x, self.y, self.z)
                 self.draw_figur()
                 glPopMatrix()
-                Figur.helperSetupLighting()
-                Figur.helperPlaceLight()
+
 
                 #self.draw_light()
                 display.flip()
             # pause the program for an amount of time [ms]
-            pygame.time.wait(10)
+                pygame.time.wait(10)
         # quit pygame and exit the application
         pygame.quit()
 
     @staticmethod
     def helperSetupLighting():
-        zeros = (0.15, 0.15, 0.15, 1.0)
-        ones = (1.0, 1.0, 1.0, 1.0)
+        zeros = (0.15, 0.15, 0.15, 0.3)
+        ones = (1.0, 1.0, 1.0, 0.3)
         half = (0.5, 0.5, 0.5, 0.5)
 
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, zeros)
