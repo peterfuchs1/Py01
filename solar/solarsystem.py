@@ -32,14 +32,36 @@ class Figur:
         self.done = False
         self.paused = False
         pygame.init()
-        self.display = (800, 600)
+        self.w = 800
+        self.h = 600
+        self.display = (self.w, self.h)
         display.set_mode(self.display, DOUBLEBUF | OPENGL)
-        glShadeModel(GL_SMOOTH)
-        gluPerspective(45.0, (self.display[0] / self.display[1]), 0.1, 500)
+        display.set_caption("A simple solarsystem")
+        glShadeModel(GL_FLAT)
+        glClearColor(0.0, 0.0, 0.0, 0.0 )
+        glClearDepth(1.0 )
+        glEnable(GL_DEPTH_TEST)
+
+        glMatrixMode( GL_PROJECTION )
+        #glLoadIdentity()
+
+        #glShadeModel(GL_SMOOTH)
+        gluPerspective(60.0, (self.display[0] / self.display[1]), 0.5, 100)
         # moving back.
         glTranslatef(0.5, 0.5, -8.0)
         # where we might be
-        glRotatef(10, 1, 1, 1)
+        glRotatef(5, 1, 1, 1)
+
+        glMatrixMode(GL_MODELVIEW)
+
+        self.spinMode = GL_TRUE
+        self.singleStep = GL_FALSE
+
+        # These three variables control the animation's state and speed.
+        self.HourOfDay = 0.0
+        self.DayOfYear = 0.0
+        self.AnimateIncrement = 24.0  # Time step for animation (hours)
+        glutInit()
 
     def loop(self):
         """ The basic loop for presentation
@@ -50,39 +72,61 @@ class Figur:
             self.input()
             if self.done:
                 break
-            if not self.paused:
-                # Unsere Figur wird um 1° um die z-Achse gedreht
-                glRotatef(1, 0, 0, 1)
-                # glClearColor(0.5, 0.5, 0.5, 1)
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+                # Clear the redering window
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+            if self.spinMode:
+                # Update the animation state
+                self.HourOfDay += self.AnimateIncrement
+                self.DayOfYear += self.AnimateIncrement / 24.0
 
-                # Position camera to look at the world origin.
-                # gluLookAt(5, 5, 5, 0, 0, 0, 0, 0, 1)
+                self.HourOfDay -= (self.HourOfDay // 24 * 24)
+                self.DayOfYear -= (self.DayOfYear // 365 * 365)
 
-                # Farbbuffer und Tiefenpuffer entleeren
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-                # merke die aktuelle Matrix
-                glPushMatrix()
-                # glLoadIdentity()
-                self.draw_sun()
-                glTranslatef(self.x, self.y, self.z)
-                self.draw_figur()
-                glPopMatrix()
-                Figur.helperSetupLighting()
-                Figur.helperPlaceLight()
+            # Clear the current matrix (Modelview)
+            glLoadIdentity()
+            #  Back off eight units to be able to view from the origin.
+            glTranslatef(0.0, 0.0, -8.0)  # Rotate the plane of the elliptic
+            # (rotate the model's plane about the x axis by fifteen degrees)
+            #glRotatef(1.0, 0.0, 0.0, 1.0)
+            glRotatef(15.0, 1.0, 0.0, 0.0)
 
-                #self.draw_light()
-                display.flip()
+            # Draw the sun	-- as a yellow,  wireframe sphere
+            glColor3f(1.0, 1.0, 0.0)
+            glutWireSphere(1.0, 50, 50)
+            # Draw the Earth  # First position it around the sun  #		Use DayOfYear to determine its position
+            glRotatef(360.0 * self.DayOfYear / 365.0, 0.0, 1.0, 0.0)
+            glTranslatef(4.0, 0.0, 0.0)
+            glPushMatrix()  # Save matrix state  # Second,  rotate the earth on its axis.
+            # Use HourOfDay to determine its rotation.
+            glRotatef(360.0 * self.HourOfDay / 24.0, 0.0, 1.0, 0.0)  # Third,  draw the earth as a wireframe sphere.
+            glColor3f(0.2, 0.2, 1.0)
+            glutWireSphere(0.4, 40, 40)
+            glPopMatrix()  # Restore matrix state
+            #  Draw the moon.
+            # #	Use DayOfYear to control its rotation around the earth
+            glRotatef(360.0 * 12.0 * self.DayOfYear / 365.0, 0.0, 1.0, 0.0)
+            glTranslatef(0.7, 0.0, 0.0)
+            glColor3f(0.3, 0.7, 0.3)
+            glutWireSphere(0.1, 20, 20)  # Flush the pipeline,  and swap the buffers
+
+            glFlush()
+            #glutSwapBuffers()
+
+            if self.singleStep:
+                self.spinMode = GL_FALSE
+            #glutPostRedisplay()  # Request a re-draw for animation purposes
             # pause the program for an amount of time [ms]
-            pygame.time.wait(10)
+            pygame.time.wait(20)
+            display.flip()
+
         # quit pygame and exit the application
         pygame.quit()
 
     @staticmethod
     def helperSetupLighting():
-        zeros = (0.15, 0.15, 0.15, 1.0)
-        ones = (1.0, 1.0, 1.0, 1.0)
+        zeros = (0.15, 0.15, 0.15, 0.3)
+        ones = (1.0, 1.0, 1.0, 0.3)
         half = (0.5, 0.5, 0.5, 0.5)
 
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, zeros)
@@ -94,6 +138,7 @@ class Figur:
         glEnable(GL_LIGHT0)
         glEnable(GL_LIGHTING)
         glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE)
+
         glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
         glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
         glEnable(GL_TEXTURE_GEN_S)
