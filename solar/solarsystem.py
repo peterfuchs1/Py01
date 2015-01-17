@@ -6,8 +6,8 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from pygame import *
 from pygame.locals import *
-
-from PIL import Image
+# Pillow for images
+# from PIL import Image
 
 
 class Figur:
