@@ -10,17 +10,17 @@ from pygame.locals import *
 # from PIL import Image
 
 
-class Figur:
+class Animation:
 	""" Creates a simple animation of our solar system with pygame and OpenGL
 
 	:ivar bool done: game finished?
 	:ivar bool paused: game paused?
 	:ivar bool light: light on?
 	:ivar int w: width of the frame
-	:ivar int w: heigth of the frame
+	:ivar int h: heigth of the frame
 	:ivar hourOfDay: hour of the day
 	:ivar dayOfYear: day of the year
-	:ivar marsDayOfYear: mars days of the mars year
+	:ivar marsDayOfYear: mars day of the mars year
 	:ivar tuple display: dimension of the frame
 	"""
 
@@ -72,6 +72,7 @@ class Figur:
 	def loop(self):
 		""" The main loop for presentation
 
+		:return:
 		"""
 		while True:
 			# events abfragen
@@ -119,10 +120,10 @@ class Figur:
 			glutSolidSphere(1.0, 50, 50)
 
 			if self.light:
-				Figur.setupLighting()
-				Figur.placeLight()
+				Animation.setupLighting()
+				Animation.placeLight()
 			else:
-				Figur.lightOff()
+				Animation.lightOff()
 
 			# Draw the Mars
 			# First position it around the sun
@@ -199,7 +200,7 @@ class Figur:
 
 	@staticmethod
 	def placeLight():
-		""" place the light in center
+		""" place the light in center of origin
 
 		:return:
 		"""
@@ -249,8 +250,9 @@ class Figur:
 	"""
 
 	def input(self):
-		""" Reagiert auf Events von Keyboard und Maus
+		""" We catch all user interaction as events from mouse and keyboard
 
+		:return:
 		"""
 		ev = pygame.event.poll()
 		if ev.type == QUIT:
@@ -298,4 +300,4 @@ class Figur:
 
 
 if __name__ == '__main__':
-	Figur()
+	Animation()
