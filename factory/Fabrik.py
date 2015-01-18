@@ -3,7 +3,7 @@ from abc import ABCMeta
 
 
 class Fabrik(metaclass=ABCMeta):
-	""" This is the base class of all factories
+	""" This is the abstract base class of all factories
 
 	:ivar _fabArt: which products can be produced?
 	"""

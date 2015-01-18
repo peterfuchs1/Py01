@@ -5,11 +5,15 @@ from factory.Fabrik import Fabrik
 
 
 class SpezialFabrik(Fabrik):
-	""" This factory can produce all products!
+	""" This factory produces all products!
 
 	"""
 	@staticmethod
 	def erzeuge(product):
+		"""
+		:param product: the product (string) to produce
+		:return: a new instance of the product
+		"""
 		m = globals()  # get the global symbol table as a list
 		if product in m:  # do we have this product?
 			p = m[product]()  # create a new instance of the product

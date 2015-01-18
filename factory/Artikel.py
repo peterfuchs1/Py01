@@ -3,6 +3,9 @@ from abc import ABCMeta
 
 
 class Einheiten:
+	""" units of our products
+
+	"""
 	STK = "stk"
 	M = "m"
 	KG = "kg"
@@ -11,7 +14,10 @@ class Einheiten:
 	ML = "ml"
 
 
-class Artikel:
+class Artikel(metaclass=ABCMeta):
+	""" this is the abstract base class of all products
+
+	"""
 	def __init__(self, nummer, bezeichnung, preis,
 	             menge=1, mengenEinheit=Einheiten.STK, gewicht=1):
 		self.nummer = nummer

@@ -63,7 +63,7 @@ class Einkaufswagen(IEinkaufswagen):
 		:return:
 		"""
 		if not self.shipped:
-			self.shipped = self.paid
+			self.shipped = self.packed
 
 	def verpacken(self):
 		""" packing your paid products
@@ -78,5 +78,4 @@ class Einkaufswagen(IEinkaufswagen):
 
 		:return:
 		"""
-		if not self.paid:
-			self.paid = True
+		self.paid = True

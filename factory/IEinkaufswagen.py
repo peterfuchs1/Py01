@@ -4,11 +4,14 @@ from abc import ABCMeta, abstractmethod
 
 
 class IEinkaufswagen (object, metaclass=ABCMeta):
+	""" The pure abstract base class of all baskets
+
+	"""
 	@abstractmethod
 	def addProduct(self, product):
 		"""  add a new product to the basket
 
-		:param product:
+		:param product: a product
 		:return:
 		"""
 		pass
@@ -39,4 +42,8 @@ class IEinkaufswagen (object, metaclass=ABCMeta):
 
 	@abstractmethod
 	def __str__(self):
+		""" convert the status into a string
+
+		:return:
+		"""
 		pass
