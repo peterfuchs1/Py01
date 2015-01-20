@@ -7,7 +7,7 @@ from OpenGL.GLUT import *
 from pygame import *
 from pygame.locals import *
 # Pillow for images
-# from PIL import Image
+from PIL import Image
 
 
 class Animation:
@@ -60,12 +60,15 @@ class Animation:
 		self.dayOfYear = 0.0
 		self.marsDayOfYear = 0.0
 
-		self.animateIncrement = 12.0  # Time step for animation (hours)
+		self.animateIncrement = 4.0  # Time step for animation (hours)
 		glutInit()
 
 		# We could load a image for texuring
-		# self.imageID = self.loadImage()
-
+		self.imageSun = self.loadImage("sunmap.jpg")
+		self.imageMars = self.loadImage("marsmap.jpg")
+		self.imageEarth = self.loadImage("earthmap.jpg")
+		self.imageMoon = self.loadImage("moon.bmp")
+		self.texturing = False
 		# start the main loop
 		self.loop()
 
@@ -106,8 +109,10 @@ class Animation:
 			"""
 			# Disable lighting for a bright sun
 			glDisable(GL_LIGHTING)
+
 			# load a texture
-			# self.setupTexture()
+			if self.texturing:
+				self.setupTexture(self.imageSun)
 
 			# Back off eight units to be able to view from the origin.
 			glTranslatef(0.0, 0.0, -8.0)
@@ -124,6 +129,9 @@ class Animation:
 				Animation.placeLight()
 			else:
 				Animation.lightOff()
+			# load a texture
+			if self.texturing:
+				self.setupTexture(self.imageMars)
 
 			# Draw the Mars
 			# First position it around the sun
@@ -139,6 +147,10 @@ class Animation:
 			glutSolidSphere(0.25, 40, 40)
 			glPopMatrix()  # Restore matrix state
 
+			# load a texture
+			if self.texturing:
+				self.setupTexture(self.imageEarth)
+
 			# Draw the Earth
 			#  First position it around the sun
 			# 	Use DayOfYear to determine its position
@@ -151,6 +163,10 @@ class Animation:
 			# Third,  draw the earth as a wireframe sphere.
 			glColor3f(0.2, 0.2, 1.0)
 			glutSolidSphere(0.35, 40, 40)
+			# load a texture
+			if self.texturing:
+				self.setupTexture(self.imageMoon)
+
 			glPopMatrix()  # Restore matrix state
 			#  Draw the moon.
 			# #	Use DayOfYear to control its rotation around the earth
@@ -158,6 +174,7 @@ class Animation:
 			glTranslatef(0.5, 0.0, 0.0)
 			glColor3f(0.3, 0.7, 0.3)
 			glutSolidSphere(0.1, 20, 20)
+
 
 			# Flush the pipeline
 			glFlush()
@@ -219,14 +236,15 @@ class Animation:
 
 
 	# method for loading a bitmap for texture
-	"""
-	def loadImage( self, imageName = "earth.bmp" ):
+
+	def loadImage( self, imageName = "earth.bmp", encoder = "raw" ):
 		# PIL defines an "open" method which is Image specific!
 		im = Image.open(imageName)
+
 		try:
-		    ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBA", 0, -1)
+		    ix, iy, image = im.size[0], im.size[1], im.tostring(encoder, "RGBA", 0, -1)
 		except SystemError:
-		    ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBX", 0, -1)
+		    ix, iy, image = im.size[0], im.size[1], im.tostring(encoder, "RGBX", 0, -1)
 
 		ID = glGenTextures(1)
 		# Make our new texture ID the current 2D texture
@@ -238,7 +256,7 @@ class Animation:
 		# or the string data is stored in user space, the data is only present within the GL after this call exits.
 		return ID
 
-	def setupTexture(self):
+	def setupTexture(self, imageID):
 		# Render-time texture environment setup
 		# Configure the texture rendering parameters
 		glEnable(GL_TEXTURE_2D)
@@ -246,8 +264,8 @@ class Animation:
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
 		# Re-select our texture, could use other generated textures if we had generated them earlier...
-		glBindTexture(GL_TEXTURE_2D, self.imageID)
-	"""
+		glBindTexture(GL_TEXTURE_2D, imageID)
+
 
 	def input(self):
 		""" We catch all user interaction as events from mouse and keyboard
@@ -271,7 +289,10 @@ class Animation:
 				self.light = not self.light
 			# mouse button left
 			elif ev.button == 1:
-				self.paused = not self.paused
+				self.texturing = not self.texturing
+				if not self.texturing:
+					# unbind our texture to standard object
+					glBindTexture(GL_TEXTURE_2D, 0)
 
 			return
 
@@ -289,7 +310,7 @@ class Animation:
 		elif kpb[K_DOWN]:
 			# slow down 10%
 			self.animateIncrement /= 1.1
-		elif kpb[K_s]:
+		elif kpb[K_t]:
 			pass
 		elif kpb[K_LEFT]:
 			pass
