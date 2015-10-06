@@ -1,11 +1,10 @@
-__author__ = 'uhs374h'
 """
 Created on 27.12.2013
 
 @author: uhs374h
 """
+from bruch.Bruch import *
 import unittest
-from bruch import *
 
 
 class TestAllgemein(unittest.TestCase):
@@ -27,6 +26,14 @@ class TestAllgemein(unittest.TestCase):
     def testTuple2(self):
         z, n = self.b
         self.assertEqual(Bruch(z, n), self.b)
+
+    def testTuple3_Error(self):
+        b3 = list(self.b2)
+        self.assertRaises(IndexError, self.tryIndex, b3, 3)
+
+    @staticmethod
+    def tryIndex(obj, index):
+        return obj[index]
 
 if __name__ == "__main__":
     unittest.main()
