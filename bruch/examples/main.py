@@ -3,8 +3,7 @@ Created on 28.12.2013
 
 @author: uhs374h
 '''
-
-from bruch.Bruch import Bruch
+from bruch.Bruch import *
 from random import randint
 if __name__ == '__main__':
     b1=Bruch(3,4)
