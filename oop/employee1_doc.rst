@@ -3,7 +3,7 @@ Einfuehrungsbeispiel Python OOP
 
 .. bibliographic fields:
 
-:Author: Walter Rafeiner-Magor
+:Author: peterfuchs1
 :organization: TGM Wien
 :date: $Date: 2014-09-14 $
 :status: This is a "work in progress"

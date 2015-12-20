@@ -8,7 +8,7 @@ Welcome to Bruch's documentation!
 
 .. bibliographic fields:
 
-:Author: Walter Rafeiner-Magor
+:Author: peterfuchs1
 :organization: TGM Wien
 :date: 2014-09-14
 :status: This is a "work in progress"

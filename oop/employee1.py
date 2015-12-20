@@ -3,7 +3,7 @@ Einfuehrungsbeispiel fuer OOP
 
 """
 from __future__ import print_function
-__author__ = 'Walter Rafeiner-Magor'
+__author__ = 'peterfuchs1'
 class Employee(object):
     """ Doc-String der Klasse
 

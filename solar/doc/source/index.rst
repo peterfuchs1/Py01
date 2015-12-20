@@ -7,7 +7,7 @@ Welcome to The solar system's documentation!
 ============================================
 .. bibliographic fields:
 
-:Author: Walter Rafeiner-Magor
+:Author: peterfuchs1
 :organization: TGM Wien
 :date: 2015-01-15
 :status: This is a "work in progress"

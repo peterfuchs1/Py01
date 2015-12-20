@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'apihelper'
-copyright = '2014, Mark Pilgrim, Walter Rafeiner-Magor'
+copyright = '2014, Mark Pilgrim, peterfuchs1'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -201,7 +201,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'apihelper.tex', 'apihelper Documentation',
-   'Mark Pilgrim, Walter Rafeiner-Magor', 'manual'),
+   'Mark Pilgrim, peterfuchs1', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -231,7 +231,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'apihelper', 'apihelper Documentation',
-     ['Mark Pilgrim, Walter Rafeiner-Magor'], 1)
+     ['Mark Pilgrim, peterfuchs1'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -245,7 +245,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'apihelper', 'apihelper Documentation',
-   'Mark Pilgrim, Walter Rafeiner-Magor', 'apihelper', 'One line description of project.',
+   'Mark Pilgrim, peterfuchs1', 'apihelper', 'One line description of project.',
    'Miscellaneous'),
 ]
 

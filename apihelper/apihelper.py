@@ -3,7 +3,7 @@
 This program is part of "Dive Into Python", a free Python book for
 experienced programmers.  Visit http://diveintopython.org/ for the
 latest version.
-with enhancements for attributes (c) walter rafeiner-Magor
+with enhancements for attributes (c) peterfuchs1
 """
 
 __author__ = "Mark Pilgrim (mark@diveintopython.org)"

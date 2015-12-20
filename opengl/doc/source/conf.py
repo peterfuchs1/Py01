@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'OpenGL'
-copyright = '2014, Walter Rafeiner-Magor'
+copyright = '2014, peterfuchs1'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -200,7 +200,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'opengl.tex', 'OpenGL Documentation',
-   'Walter Rafeiner-Magor', 'manual'),
+   'peterfuchs1', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -230,7 +230,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'opengl', 'OpenGL Documentation',
-     ['Walter Rafeiner-Magor'], 1)
+     ['peterfuchs1'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -244,7 +244,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'OpenGL', 'OpenGL Documentation',
-   'Walter Rafeiner-Magor', 'OpenGL', 'One line description of project.',
+   'peterfuchs1', 'OpenGL', 'One line description of project.',
    'Miscellaneous'),
 ]
 
